@@ -1,25 +1,14 @@
-import wx
+import PySimpleGUI as sg
 
-# class AssignerFrame(wx.Panel):
-#     def __init__(self, parent):
-#         super().__init__(parent)
-#         self.bunkhouses = {
-#             'Girls 1': [],
-#             'Girls 2': [],
-#             'Girls 3': [],
-#             'Boys 1': [],
-#             'Boys 2': [],
-#             'Boys 3': []
-#         }
-#         self.tribes = {
-#             'Eagles': [],
-#             'Wolves': [],
-#             'Bears': [],
-#             'Hawks': [],
-#             'Lions': [],
-#             'Panthers': []
-#         }
-#
-#     def assign_bunkhouses(self):
-#
-#     def assign_tribes(self):
+class AssignerFrame:
+    def __init__(self):
+
+    def run(self):
+
+    def assigning_bunkhouse(self, row):
+
+    def assigning_tribe(self, row):
+
+
+if __name__ == '__main__':
+    AssignerFrame().run()

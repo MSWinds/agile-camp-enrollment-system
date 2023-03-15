@@ -1,31 +1,39 @@
-import wx
+import PySimpleGUI as sg
 from application_input import ApplicationInputFrame
 from assigner import AssignerFrame
 from checkin import CheckinFrame
 
 
-class MainFrame(wx.Frame):
-    def __init__(self):
-        super().__init__(None, title="Camp Registration System", size=(600, 400))
+def main():
+    # Set PySimpleGUI theme
+    sg.theme('LightBlue2')
+    # Define GUI layout with three buttons
+    frame = [
+        [sg.Text('Camp Gila Breath Management System', font=('Helvetica', 20), justification='center', size=(40, 1),relief=sg.RELIEF_RIDGE)],
+        [sg.Column([[sg.Button('Register', size=(30, 2), font=('Helvetica', 14))],
+                    [sg.Button('Check Availability', size=(30, 2), font=('Helvetica', 14))],
+                    [sg.Button('Check-in', size=(30, 2), font=('Helvetica', 14))],
+                    [sg.Button('Quit', size=(30, 2), font=('Helvetica', 14))]])]]
 
-        notebook = wx.Notebook(self)
+    # Create PySimpleGUI window
+    window = sg.Window('Camp Gila Breath Management System', frame, element_justification='c').Finalize()
 
-        self.application_input_tab = ApplicationInputFrame(notebook)
-        notebook.AddPage(self.application_input_tab, "Application Input")
+    # Keep window open and responsive to button clicks
+    while True:
+        event, values = window.read()
+        if event == sg.WIN_CLOSED or event == 'Quit':
+            break
+        if event == 'Register':
+            ApplicationInputFrame().run()
 
-        self.assigner_tab = AssignerFrame(notebook)
-        notebook.AddPage(self.assigner_tab, "Assigner")
+        if event == 'Check Availability':
+            AssignerFrame().run()
 
-        self.checkin_tab = CheckinFrame(notebook)
-        notebook.AddPage(self.checkin_tab, "Check-in")
+        if event == 'Check-in':
+            CheckinFrame().run()
 
-        sizer = wx.BoxSizer(wx.VERTICAL)
-        sizer.Add(notebook, 1, wx.EXPAND)
-        self.SetSizer(sizer)
-        self.Show()
+    window.close()
 
 
-if __name__ == "__main__":
-    app = wx.App()
-    frame = MainFrame()
-    app.MainLoop()
+if __name__ == '__main__':
+    main()
