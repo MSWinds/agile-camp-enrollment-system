@@ -9,7 +9,8 @@ def main():
     sg.theme('LightBlue2')
     # Define GUI layout with three buttons
     frame = [
-        [sg.Text('Camp Gila Breath Management System', font=('Helvetica', 20), justification='center', size=(40, 1),relief=sg.RELIEF_RIDGE)],
+        [sg.Text('Camp Gila Breath Management System', font=('Helvetica', 20), justification='center', size=(40, 1),
+                 relief=sg.RELIEF_RIDGE)],
         [sg.Column([[sg.Button('Register', size=(30, 2), font=('Helvetica', 14))],
                     [sg.Button('Check Availability', size=(30, 2), font=('Helvetica', 14))],
                     [sg.Button('Check-in', size=(30, 2), font=('Helvetica', 14))],

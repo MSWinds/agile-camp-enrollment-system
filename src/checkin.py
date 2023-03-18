@@ -1,4 +1,7 @@
 import PySimpleGUI as sg
+import pandas as pd
+import os
+
 
 class CheckinFrame:
     def __init__(self):
@@ -13,7 +16,34 @@ class CheckinFrame:
             [sg.Button('Check In', font=('Helvetica', 14))]]
 
     def run(self):
-
+        window = sg.Window('Check In', self.layout, element_justification='c').Finalize()
+        while True:
+            event, values = window.read()
+            if event == sg.WIN_CLOSED:
+                break
+            if event == 'Check In':
+                camper_info = pd.read_csv('camper_info.csv')
+                if (camper_info['Last Name'] == values['last_name']) \
+                        or (camper_info['CamperID'] == int(values['camper_id'])):
+                    # set the check-in status to True
+                    values['Check-in Status'] = True
+                    # add the medical condition and dietary restriction to the record
+                    checkin_data = pd.DataFrame({
+                        'Last Name': [values['last_name']],
+                        'CamperID': [values['camper_id']],
+                        'Gender': [values['gender']],
+                        'Check-in Status': [values['Check-in Status']],
+                        'Medical Condition': [values['med_condition']],
+                        'Dietary Restriction': [values['dietary_restrict']]
+                    })
+                    # save the dataframe into a csv file
+                    if not os.path.isfile('checkin_info.csv'):
+                        checkin_data.to_csv('checkin_info.csv', index=False)
+                    else:
+                        checkin_data.to_csv('checkin_info.csv', mode='a', header=False, index=False)
+                    sg.Popup('Check-in Successful!')
+                    break
+                else:
                     sg.Popup('Error: No matching record found. Please check your input.')
         window.close()
 

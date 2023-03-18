@@ -1,5 +1,9 @@
-
+import pandas as pd
 import PySimpleGUI as sg
+import os
+import uuid
+import hashlib
+
 
 class ApplicationInputFrame:
     def __init__(self):
@@ -19,6 +23,29 @@ class ApplicationInputFrame:
             [sg.Button('Save and Go Payment Tab', font=('Helvetica', 14))]]
 
     def run(self):
+        window = sg.Window('Application Input', self.layout, element_justification='c').Finalize()
+        while True:
+            event, values = window.read()
+            if event == sg.WIN_CLOSED:
+                break
+            if event == 'Save and Go Payment Tab':
+                # Generate a unique id and convert it to a string and remove the hyphens
+                str_uid = str(uuid.uuid4()).replace("-", "")
+                # Use SHA-256 hashing and get the first 9 digits of the hexadecimal digest
+                hash_uid = hashlib.sha256(str_uid.encode()).hexdigest()[:9]
+                # Convert it to an integer base 16
+                uid = int(hash_uid, 16)
+                camper_data = pd.DataFrame({
+                    'CamperID': [uid],
+                    'First Name': [values['f_name']],
+                    'Last Name': [values['l_name']],
+                    'Birth Date': [values['birth_date']],
+                    'Age': [values['age']],
+                    'Gender': [values['gender']],
+                    'Session': [values['session_choice']],
+                    'Contact Information': [values['contact_info']],
+                    'Special Requests': [values['special_requests']]
+                })
                 PaymentInputFrame().run(camper_data)
                 break
         window.close()
@@ -36,7 +63,30 @@ class PaymentInputFrame:
             [sg.Button('Submit', font=('Helvetica', 14))]]
 
     def run(self, camper_data):
+        window = sg.Window('Payment Input', self.layout, element_justification='c').Finalize()
+        while True:
+            event, values = window.read()
+            if event == sg.WIN_CLOSED:
+                break
+            if event == 'Submit':
+                current_date = pd.Timestamp.now().strftime('%Y-%m-%d')
+                check_valid = 'Yes' if values['check_valid'] else 'No'
+                # save input into the data frame
+                payment_data = pd.DataFrame({
+                    'Check Number': [values['check_num']],
+                    'Payee Name': [values['check_name']],
+                    'Amount': [values['check_amount']],
+                    'Valid': [check_valid],
+                    'Date': [current_date]
+                })
+                camper_info = pd.concat([camper_data, payment_data], axis=1)
+                # save the dataframe into a csv file
+                if not os.path.isfile('camper_info.csv'):
+                    camper_info.to_csv('camper_info.csv', index=False)
+                else:
+                    camper_info.to_csv('camper_info.csv', mode='a', header=False, index=False)
 
+                # We can call a notification system here to print out the paper.
                 sg.Popup('Submit Successful!')
                 break
         window.close()
@@ -44,3 +94,4 @@ class PaymentInputFrame:
 
 if __name__ == '__main__':
     ApplicationInputFrame().run()
+
