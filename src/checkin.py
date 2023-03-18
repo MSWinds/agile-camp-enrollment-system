@@ -23,8 +23,8 @@ class CheckinFrame:
                 break
             if event == 'Check In':
                 camper_info = pd.read_csv('camper_info.csv')
-                if (camper_info['Last Name'] == values['last_name']) \
-                        or (camper_info['CamperID'] == int(values['camper_id'])):
+                if str(values['last_name']) in camper_info['Last Name'].values \
+                        or int(values['camper_id']) in camper_info['CamperID'].values:
                     # set the check-in status to True
                     values['Check-in Status'] = True
                     # add the medical condition and dietary restriction to the record
