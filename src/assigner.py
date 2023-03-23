@@ -39,32 +39,67 @@ def assigning_bunkhouse(merged_data):
 
 
 def assigning_tribes(df):
+    # Define the session names and initialize an empty dictionary for tribes
     sessions = ['June', 'July', 'August']
     tribes = {}
 
+    # Loop through each session
     for session in sessions:
+        # Filter the DataFrame to get data for the current session
         session_data = df[df['Session'] == session]
-        boys = session_data[session_data['Gender'] == 'M']
-        girls = session_data[session_data['Gender'] == 'F']
 
+        # Filter the session data by gender and sort by age
+        boys = session_data[session_data['Gender'] == 'M'].sort_values('Age')
+        girls = session_data[session_data['Gender'] == 'F'].sort_values('Age')
+
+        # Loop through the numbers 1 to 6 to create six tribes per session
         for i in range(1, 7):
+            # Create a tribe name using the current number and session name
             tribe_name = f'Tribe{i}_{session}'
+
+            # Slice the boys and girls DataFrames to get the members for the current tribe
             tribe_boys = boys.iloc[(i - 1) * 6:i * 6]
             tribe_girls = girls.iloc[(i - 1) * 6:i * 6]
 
+            # Concatenate the boys and girls DataFrames to create a combined DataFrame
             tribe_members = pd.concat([tribe_boys, tribe_girls])
+
+            # Add the tribe name and the list of camper IDs in the tribe to the tribes dictionary
             tribes[tribe_name] = tribe_members['CamperID'].tolist()
 
+    # Initialize an empty list to store tribe assignments
     tribe_assignments = []
 
+    # Loop through each row in the original DataFrame
     for index, row in df.iterrows():
+        # Loop through the tribes dictionary to find the tribe that the current camper belongs to
         for tribe_name, members in tribes.items():
             if row['CamperID'] in members:
+                # Append the tribe name to the tribe_assignments list
                 tribe_assignments.append(tribe_name)
                 break
 
+    # Add a new column 'Tribe' to the DataFrame with the values from tribe_assignments
     df['Tribe'] = tribe_assignments
+
+    # Return the modified DataFrame
     return df
+
+
+def plot_gender_distribution(checkin_data):
+    fig = plt.figure()
+    sessions = checkin_data['Session'].unique()
+
+    for i, session in enumerate(sessions):
+        ax = fig.add_subplot(1, 3, i + 1)
+        session_data = checkin_data[checkin_data['Session'] == session]
+        ax.bar(session_data['Gender'].unique(), session_data['Gender'].value_counts())
+        ax.set_xlabel('Gender')
+        ax.set_ylabel('Count')
+        ax.set_title(f'Gender Distribution for Session {session}')
+
+    fig.tight_layout()
+    return fig
 
 
 class AssignerFrame:
@@ -72,35 +107,17 @@ class AssignerFrame:
         self.layout = [
             [sg.Text('Assigner', font=('Helvetica', 20), justification='center', size=(40, 1),
                      relief=sg.RELIEF_RIDGE)],
-            [sg.Graph(canvas_size=(400, 300), graph_bottom_left=(0, 0), graph_top_right=(400, 300), key='graph')],
+            [sg.Canvas(size=(400, 300), key='graph')],
             [sg.Button('Assign', font=('Helvetica', 14))]
         ]
-        self.window = sg.Window('Assigner', self.layout).Finalize()
 
     def run(self):
-        window = sg.Window('Assigner', self.layout).Finalize()
+        window = sg.Window('Assigner', self.layout)
         checkin_data = pd.read_csv('checkin_info.csv')
-        # plot the gender distribution of checked-in campers as a bar plot
-        fig = plt.figure()
-        # get the unique sessions from the checkin data
-        sessions = checkin_data['Session'].unique()
-        # loop through each session and create a subplot
-        for i, session in enumerate(sessions):
-            ax = fig.add_subplot(1, 3, i + 1)  # create a subplot with 1 rows and 3 columns
-            # filter the checkin data by session
-            session_data = checkin_data[checkin_data['Session'] == session]
-            # plot the bar chart of gender counts for the session
-            ax.bar(session_data['Gender'].unique(), session_data['Gender'].value_counts())
-            ax.set_xlabel('Gender')
-            ax.set_ylabel('Count')
-            ax.set_title(f'Gender Distribution for Session {session}')
+        fig = plot_gender_distribution(checkin_data)
 
-        # adjust the figure layout to avoid overlapping labels
-        fig.tight_layout()
-        # get the figure canvas from the figure object
-        fig_canvas_agg = FigureCanvasTkAgg(fig, window['graph'].TKCanvas)
-
-        # draw the figure canvas on the graph element
+        # Draw the plot using the sg.Canvas element
+        fig_canvas_agg = FigureCanvasTkAgg(fig, window['graph'].Widget)
         fig_canvas_agg.draw()
 
         while True:
@@ -108,15 +125,10 @@ class AssignerFrame:
             if event == sg.WIN_CLOSED:
                 break
             if event == 'Assign':
-                # read the camper info data
                 camper_info = pd.read_csv('camper_info.csv')
-                # merge the checkin data with camper info based on CamperID
                 merged_data = pd.merge(checkin_data, camper_info[['CamperID', 'Age', 'Session']], on='CamperID')
-                # assign bunkhouses based on gender, age and session
                 merged_data['Bunkhouse'] = assigning_bunkhouse(merged_data)['Bunkhouse']
-                # assign tribes based on gender, age and session
                 merged_data['Tribe'] = assigning_tribes(merged_data)['Tribe']
-                # save the assignment data as a csv file
                 merged_data.to_csv('assignment.csv', index=False)
 
         window.close()

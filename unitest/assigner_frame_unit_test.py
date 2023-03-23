@@ -1,35 +1,31 @@
 import unittest
 import pandas as pd
-from matplotlib.figure import Figure
-import PySimpleGUI as sg
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-from assigner import AssignerFrame
+from assigner import plot_gender_distribution
 
 
-class TestAssignerFrame(unittest.TestCase):
+class TestPlotGenderDistribution(unittest.TestCase):
 
-    def test_assigner_frame(self):
-        # initialize the AssignerFrame class
-        assigner = AssignerFrame()
+    def setUp(self):
+        self.data = pd.DataFrame({
+            'CamperID': range(1, 217),
+            'Last Name': ['Doe'] * 216,
+            'Gender': ['M'] * 108 + ['F'] * 108,
+            'Age': [10] * 216,
+            'Session': ['June'] * 36 + ['July'] * 36 + ['August'] * 36 +
+                       ['June'] * 36 + ['July'] * 36 + ['August'] * 36
+        })
 
-        # check that the window and layout are initialized correctly
-        self.assertIsInstance(assigner.window, sg.Window)
-        self.assertIsInstance(assigner.layout, list)
+    def test_plot_gender_distribution(self):
+        fig = plot_gender_distribution(self.data)
+        ax_list = fig.axes
 
-        # check that the gender distribution plot is created correctly
-        checkin_data = pd.read_csv('checkin_info.csv')
-        fig = assigner.create_gender_distribution_plot(checkin_data)
-        self.assertIsInstance(fig, Figure)
+        expected_distribution = {'June': (36, 36), 'July': (36, 36), 'August': (36, 36)}
 
-        # check that the assigning functions work correctly
-        camper_info = pd.read_csv('../camper_info.csv')
-        merged_data = pd.merge(checkin_data, camper_info[['CamperID', 'Age', 'Session']], on='CamperID')
-        merged_data['Bunkhouse'] = merged_data.apply(assigner.assigning_bunkhouse, axis=1)
-        merged_data['Tribe'] = merged_data.apply(assigner.assigning_tribe, axis=1)
-        self.assertIsNotNone(merged_data['Bunkhouse'])
-        self.assertIsNotNone(merged_data['Tribe'])
+        for ax, session in zip(ax_list, self.data['Session'].unique()):
+            bars = ax.containers[0]
+            bar_counts = [bar.get_height() for bar in bars]
+            self.assertEqual(tuple(bar_counts), expected_distribution[session])
 
-        # check that the assignment data is saved correctly
-        assigner.save_assignment_data(merged_data)
-        assigned_data = pd.read_csv('assignment.csv')
-        self.assertEqual(len(assigned_data), len(merged_data))
+
+if __name__ == '__main__':
+    unittest.main()
