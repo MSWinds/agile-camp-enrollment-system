@@ -1,5 +1,13 @@
 import unittest
 from unittest.mock import patch
+import os
+import sys
+
+try:
+    sys.path.append(os.environ['IST303_PROJECT_SRC_DIR'])
+except KeyError:
+    print("Error: The environment variable IST303_PROJECT_SRC_DIR is not defined.")
+    sys.exit(1)
 from main import main, ApplicationInputFrame, AssignerFrame, CheckinFrame
 
 

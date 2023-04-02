@@ -1,7 +1,14 @@
 import unittest
 import pandas as pd
-from unittest.mock import patch, MagicMock
-from application_input import ApplicationInputFrame
+from unittest.mock import patch
+import os
+import sys
+
+try:
+    sys.path.append(os.environ['IST303_PROJECT_SRC_DIR'])
+except KeyError:
+    print("Error: The environment variable IST303_PROJECT_SRC_DIR is not defined.")
+    sys.exit(1)
 
 
 # pytest app_unit_test.py
