@@ -9,6 +9,7 @@ try:
 except KeyError:
     print("Error: The environment variable IST303_PROJECT_SRC_DIR is not defined.")
     sys.exit(1)
+from application_input import ApplicationInputFrame
 
 
 # pytest app_unit_test.py

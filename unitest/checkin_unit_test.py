@@ -1,7 +1,7 @@
 import unittest
 import PySimpleGUI as sg
 import pandas as pd
-from checkin import CheckinFrame
+
 import os
 import sys
 
@@ -10,6 +10,7 @@ try:
 except KeyError:
     print("Error: The environment variable IST303_PROJECT_SRC_DIR is not defined.")
     sys.exit(1)
+from checkin import CheckinFrame
 
 
 class TestCheckinFrame(unittest.TestCase):
