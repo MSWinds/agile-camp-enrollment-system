@@ -26,6 +26,7 @@ class ApplicationInputFrame:
         window = sg.Window('Application Input', self.layout, element_justification='c').Finalize()
         while True:
             event, values = window.read()
+            print(event, values)  # debug
             if event == sg.WIN_CLOSED:
                 break
             if event == 'Save and Go Payment Tab':
@@ -66,6 +67,7 @@ class PaymentInputFrame:
         window = sg.Window('Payment Input', self.layout, element_justification='c').Finalize()
         while True:
             event, values = window.read()
+            print(event, values)  # debug
             if event == sg.WIN_CLOSED:
                 break
             if event == 'Submit':
@@ -81,10 +83,10 @@ class PaymentInputFrame:
                 })
                 camper_info = pd.concat([camper_data, payment_data], axis=1)
                 # save the dataframe into a csv file
-                if not os.path.isfile('camper_info.csv'):
-                    camper_info.to_csv('camper_info.csv', index=False)
+                if not os.path.isfile('data/camper_info.csv'):
+                    camper_info.to_csv('data/camper_info.csv', index=False)
                 else:
-                    camper_info.to_csv('camper_info.csv', mode='a', header=False, index=False)
+                    camper_info.to_csv('data/camper_info.csv', mode='a', header=False, index=False)
 
                 # We can call a notification system here to print out the paper.
                 sg.Popup('Submit Successful!')
@@ -94,4 +96,3 @@ class PaymentInputFrame:
 
 if __name__ == '__main__':
     ApplicationInputFrame().run()
-

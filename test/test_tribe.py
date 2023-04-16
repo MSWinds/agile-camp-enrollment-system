@@ -3,12 +3,8 @@ import pandas as pd
 import os
 import sys
 
-try:
-    sys.path.append(os.environ['IST303_PROJECT_SRC_DIR'])
-except KeyError:
-    print("Error: The environment variable IST303_PROJECT_SRC_DIR is not defined.")
-    sys.exit(1)
-from assigner import assigning_tribes
+sys.path.append(os.path.abspath('../src/algorithm'))
+from assigner_algorithms import assign_tribe
 
 
 class TestAssigningTribes(unittest.TestCase):
@@ -26,7 +22,7 @@ class TestAssigningTribes(unittest.TestCase):
 
     def test_assigning_tribes(self):
         # Call the assigning_tribes function on the sample dataset
-        result = assigning_tribes(self.data)
+        result = assign_tribe(self.data)
 
         # Check if the 'tribe' column has been added to the dataset
         self.assertIn('Tribe', result.columns)
