@@ -1,7 +1,7 @@
 import PySimpleGUI as sg
 import pandas as pd
 import os
-
+import datetime
 
 class CheckinFrame:
     def __init__(self):
@@ -13,7 +13,9 @@ class CheckinFrame:
             [sg.Text('Gender:'), sg.Listbox(values=('M', 'F', 'Other'), key='gender')],
             [sg.Text('Medical Condition:'), sg.InputText(key='med_condition')],
             [sg.Text('Dietary Restriction:'), sg.InputText(key='dietary_restrict')],
+            [sg.Checkbox('Equipment', key='eq_valid')],
             [sg.Button('Check In', font=('Helvetica', 14))]]
+        
 
     def run(self):
         window = sg.Window('Check In', self.layout, element_justification='c').Finalize()
@@ -34,7 +36,9 @@ class CheckinFrame:
                         'CamperID': [values['CamperId']],
                         'Gender': [values['Gender']],
                         'Check-in Status': [values['Check-in Status']],
-                        'Medical Condition': [values['Med_Condition']],
+                        'Check-in Time': [datetime.datetime.now().strftime('%Y-%m-%d')],  # current date and time
+                        'Equipment Valid': [values['Eq_Valid']],
+                        'Medical Condition': [values['Med_Condition']], # arrivial form
                         'Dietary Restriction': [values['Dietary_Restrict']]
                     })
                     # save the dataframe into a csv file

@@ -3,7 +3,7 @@ import PySimpleGUI as sg
 import os
 import uuid
 import hashlib
-
+import datetime
 
 class ApplicationInputFrame:
     def __init__(self):
@@ -71,7 +71,6 @@ class PaymentInputFrame:
             if event == sg.WIN_CLOSED:
                 break
             if event == 'Submit':
-                current_date = pd.Timestamp.now().strftime('%Y-%m-%d')
                 check_valid = 'Yes' if values['check_valid'] else 'No'
                 # save input into the data frame
                 payment_data = pd.DataFrame({
@@ -79,7 +78,7 @@ class PaymentInputFrame:
                     'Payee Name': [values['check_name']],
                     'Amount': [values['check_amount']],
                     'Valid': [check_valid],
-                    'Date': [current_date]
+                    'Date': [datetime.datetime.now().strftime('%Y-%m-%d')]
                 })
                 camper_info = pd.concat([camper_data, payment_data], axis=1)
                 # save the dataframe into a csv file
