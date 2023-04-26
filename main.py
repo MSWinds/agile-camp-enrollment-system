@@ -1,7 +1,7 @@
 import PySimpleGUI as sg
-from application import ApplicationInputFrame
-from assigner import AssignerFrame
-from checkin import CheckinFrame
+from src.application import ApplicationInputFrame
+from src.assigner import AssignerFrame
+from src.checkin import CheckinFrame
 
 
 def main():
