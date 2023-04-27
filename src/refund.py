@@ -1,18 +1,3 @@
-# a refund system based on the payment system which has the date
-# If a request for cancellation and refund is received, the registration clerk must process it. Cancellation of enrollment and refund of payment is allowed as follows: 90% within 3 weeks of mailing of notice of acceptance and arrival instructions; 45% within 6 weeks of mailing; 0% after this. 
-# The total amount is 1000 dollars.
-# The refund system should be able to calculate the refund amount based on the date of the request.
-# The refund system should be able to print out the refund amount and the date of the request.
-
-# build a RefundFrame class with pySimpleGUI.
-# The RefundFrame class should have a layout with:
-# input the camper id and a button to submit
-# then a window will pop up to show the refund amount based on the date of the original payment in previous data set and the date of the original payment.
-# output the refund amount, the date of the original payment, and the date of the request in a csv file called refund_info.csv
-# The refund_info.csv should have the following columns:
-# CamperID, Refund Amount, Date of Original Payment, Date of Request
-# The refund_info.csv should be saved in the data folder.
-
 import PySimpleGUI as sg
 import pandas as pd
 import os
@@ -27,6 +12,7 @@ class RefundFrame:
             [sg.Text('Camper ID:'), sg.InputText(key='camper_id')],
             [sg.Button('Submit', font=('Helvetica', 14))]]
 
+    # Calculate the refund amount based on the original payment date and the date of request
     def calculate_refund(self, original_payment_date, request_date):
         date_difference = (request_date - original_payment_date).days
         if date_difference <= 21:
