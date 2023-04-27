@@ -2,13 +2,8 @@ import unittest
 import pandas as pd
 import os
 import sys
-
-try:
-    sys.path.append(os.environ['IST303_PROJECT_SRC_DIR'])
-except KeyError:
-    print("Error: The environment variable IST303_PROJECT_SRC_DIR is not defined.")
-    sys.exit(1)
-from assigner import assigning_bunkhouse
+sys.path.append(os.path.abspath('../src/algorithm'))
+from assigner_algorithms import assign_bunkhouse
 
 
 class TestAssigningBunkhouses(unittest.TestCase):
@@ -27,7 +22,7 @@ class TestAssigningBunkhouses(unittest.TestCase):
 
     def test_assigning_bunkhouse(self):
         # Test that the function returns a dataframe with the 'bunkhouse' column
-        result = assigning_bunkhouse(self.data)
+        result = assign_bunkhouse(self.data)
         self.assertTrue('Bunkhouse' in result.columns)
 
         # Test that each camper is assigned to a bunkhouse
