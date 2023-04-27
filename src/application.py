@@ -4,7 +4,8 @@ import os
 import uuid
 import hashlib
 import datetime
-
+from algorithm.accpt_letter import create_acceptance_letter
+from algorithm.rejct_letter import create_rejection_letter
 
 class ApplicationInputFrame:
     def __init__(self):
@@ -20,7 +21,9 @@ class ApplicationInputFrame:
              sg.Input('', size=(10, 1), key='birth_date')],
             [sg.Text('Contact Information:'), sg.InputText(key='contact_info')],
             [sg.Text('Special Requests:'), sg.InputText(key='special_requests')],
-            [sg.Button('Save and Go Payment Tab', font=('Helvetica', 14))]]
+            [sg.Button('Save and Go Payment Tab', font=('Helvetica', 14))],
+            [sg.Button('Reject', font=('Helvetica', 14))]
+            ]
 
     def calculate_age(self, birth_date):
         today = datetime.date.today()
@@ -66,7 +69,19 @@ class ApplicationInputFrame:
                     'Special Requests': [values['special_requests']]
                 })
                 PaymentInputFrame().run(camper_data)
-                break
+            
+            if event == 'Reject':
+                # check if the names and session are not empty
+                if values['f_name'] == '' or values['l_name'] == '' or values['session_choice'] == '':
+                    sg.Popup("Error: Please fill in the required information.")
+                    continue
+
+                rejection_result = sg.PopupGetText('Enter Rejection Result:', title='Rejection Result Input')
+                if sg.PopupYesNo('Do you want to create letters?') == 'Yes':
+                        create_rejection_letter(camper_data, rejection_result)
+                        break
+                else:
+                    continue
         window.close()
 
 
@@ -79,7 +94,9 @@ class PaymentInputFrame:
             [sg.Text('Payee Name:'), sg.InputText(key='check_name')],
             [sg.Text('Amount:'), sg.InputText(key='check_amount')],
             [sg.Checkbox('Check is Valid', key='check_valid')],
-            [sg.Button('Submit and Print', font=('Helvetica', 14))]]
+            [sg.Button('Submit and Print', font=('Helvetica', 14))],
+            [sg.Button('Reject', font=('Helvetica', 14))]
+            ]
 
     def run(self, camper_data):
         window = sg.Window('Payment Input', self.layout, element_justification='c').Finalize()
@@ -88,6 +105,20 @@ class PaymentInputFrame:
             print(event, values)  # debug
             if event == sg.WIN_CLOSED:
                 break
+
+            if event == 'Reject':
+                # check if the names and session from ApplicationInputFrame are not empty
+                if camper_data['First Name'].values[0] == '' or camper_data['Last Name'].values[0] == '' or camper_data['Session'].values[0] == '':
+                    sg.Popup("Error: Please fill in the required information.")
+                    continue
+
+                rejection_result = sg.PopupGetText('Enter Rejection Result:', title='Rejection Result Input')
+                if sg.PopupYesNo('Do you want to create letters?') == 'Yes':
+                        create_rejection_letter(camper_data, rejection_result)
+                        break
+                else:
+                    continue
+
             if event == 'Submit and Print':
                 # Check if the check number is numeric or larger than 10 digits
                 if not values['check_num'].isnumeric() or len(values['check_num']) <= 10:
@@ -109,6 +140,9 @@ class PaymentInputFrame:
                     'Date': [datetime.datetime.now().strftime('%Y-%m-%d')]
                 })
                 camper_info = pd.concat([camper_data, payment_data], axis=1)
+
+                create_acceptance_letter(camper_info)
+
                 # save the dataframe into a csv file
                 if not os.path.isfile('data/camper_info.csv'):
                     camper_info.to_csv('data/camper_info.csv', index=False)
@@ -116,7 +150,7 @@ class PaymentInputFrame:
                     camper_info.to_csv('data/camper_info.csv', mode='a', header=False, index=False)
 
                 # We can call a notification system here to print out the paper.
-                sg.Popup('Submit Successful!')
+                sg.Popup('Successful!')
                 break
         window.close()
 
