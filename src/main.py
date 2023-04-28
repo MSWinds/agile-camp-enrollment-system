@@ -2,7 +2,6 @@ import PySimpleGUI as sg
 from application import ApplicationInputFrame
 from assigner import AssignerFrame
 from checkin import CheckinFrame
-from mailing import MailingFrame
 
 def main():
     # Set PySimpleGUI theme
@@ -12,7 +11,6 @@ def main():
         [sg.Text('Camp Gila Breath Management System', font=('Helvetica', 20), justification='center', size=(40, 1),
                  relief=sg.RELIEF_RIDGE)],
         [sg.Column([[sg.Button('Register', size=(30, 2), font=('Helvetica', 14))],
-                    [sg.Button('Mailing', size=(30, 2), font=('Helvetica', 14))],
                     [sg.Button('Check-in', size=(30, 2), font=('Helvetica', 14))],
                     [sg.Button('Assign', size=(30, 2), font=('Helvetica', 14))],
                     [sg.Button('Quit', size=(30, 2), font=('Helvetica', 14))]])]]
@@ -34,9 +32,6 @@ def main():
 
         if event == 'Check-in':
             CheckinFrame().run()
-
-        if event == 'Mailing':
-            MailingFrame().run()
 
     window.close()
 

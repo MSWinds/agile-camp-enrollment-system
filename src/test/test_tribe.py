@@ -3,8 +3,9 @@ import pandas as pd
 import os
 import sys
 
-sys.path.append(os.path.abspath('../src/algorithm'))
-from assigner_algorithms import assign_tribe
+parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(parent_dir)
+from algorithm.assigner_algorithms import assign_tribe
 
 
 class TestAssigningTribes(unittest.TestCase):
