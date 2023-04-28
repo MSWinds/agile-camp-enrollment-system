@@ -4,7 +4,7 @@ from reportlab.pdfgen import canvas
 import sys
 
 def create_acceptance_letter(row):
-    sys.path.append(os.path.abspath('../src'))
+    sys.path.append(os.path.abspath('..'))
     dir_path = f"files/{row['CamperID'].values[0]}"
     if not os.path.exists(dir_path):
         os.makedirs(dir_path)
