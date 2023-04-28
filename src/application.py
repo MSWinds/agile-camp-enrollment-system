@@ -69,15 +69,21 @@ class ApplicationInputFrame:
                     'Special Requests': [values['special_requests']]
                 })
                 PaymentInputFrame().run(camper_data)
+                break
             
             if event == 'Reject':
                 # check if the names and session are not empty
                 if values['f_name'] == '' or values['l_name'] == '' or values['session_choice'] == '':
-                    sg.Popup("Error: Please fill in the required information.")
+                    sg.Popup("Error: Please fill the name and session choice.")
                     continue
 
                 rejection_result = sg.PopupGetText('Enter Rejection Result:', title='Rejection Result Input')
                 if sg.PopupYesNo('Do you want to create letters?') == 'Yes':
+                        camper_data = pd.DataFrame({
+                                        'First Name': [values['f_name']],
+                                        'Last Name': [values['l_name']],
+                                        'Session': [values['session_choice']]                        
+                                    })
                         create_rejection_letter(camper_data, rejection_result)
                         break
                 else:
@@ -109,7 +115,7 @@ class PaymentInputFrame:
             if event == 'Reject':
                 # check if the names and session from ApplicationInputFrame are not empty
                 if camper_data['First Name'].values[0] == '' or camper_data['Last Name'].values[0] == '' or camper_data['Session'].values[0] == '':
-                    sg.Popup("Error: Please fill in the required information.")
+                    sg.Popup("Error: Please fill the name and session choice.")
                     continue
 
                 rejection_result = sg.PopupGetText('Enter Rejection Result:', title='Rejection Result Input')

@@ -1,7 +1,9 @@
 import os
-from reportlab.lib.pagesizes import letter
-from reportlab.pdfgen import canvas
 import sys
+from reportlab.lib.pagesizes import letter
+from reportlab.lib.enums import TA_JUSTIFY
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 
 def create_acceptance_letter(row):
     sys.path.append(os.path.abspath('..'))
@@ -9,38 +11,42 @@ def create_acceptance_letter(row):
     if not os.path.exists(dir_path):
         os.makedirs(dir_path)
         
-    pdf_name = f"files/{row['CamperID'].values[0]}/{row['CamperID'].values[0]}_{row['Date'].values[0]}_Accpt.pdf" 
-    c = canvas.Canvas(pdf_name, pagesize=letter)
+    pdf_name = f"files/{row['CamperID'].values[0]}/{row['CamperID'].values[0]}_{row['Date'].values[0]}_Accpt.pdf"
+    
+    doc = SimpleDocTemplate(pdf_name, pagesize=letter, rightMargin=72, leftMargin=72, topMargin=72, bottomMargin=18)
+    
+    content = []
+    styles = getSampleStyleSheet()
+    styles.add(ParagraphStyle(name='Justify', alignment=TA_JUSTIFY))
 
-    c.setFont('Helvetica-Bold', 14)
-    c.drawString(50, 750, 'Acceptance Letter')
+    # Acceptance letter content
+    letter_content = f"""Acceptance Letter
 
-    c.setFont('Helvetica', 12)
-    c.drawString(50, 700, f"Dear {row['First Name'].values[0]} {row['Last Name'].values[0]},")
+Dear {row['First Name'].values[0]} {row['Last Name'].values[0]},
 
-    c.drawString(50, 680, "We are delighted to inform you that you have been accepted to our summer camp program for")
-    c.drawString(50, 665, f"{row['Session'].values[0]}. Your acceptance is based on your impressive application and the")
-    c.drawString(50, 650, "potential you have shown to make the most out of this experience.")
+We are delighted to inform you that you have been accepted to our summer camp program for {row['Session'].values[0]}. Your acceptance is based on your impressive application and the potential you have shown to make the most out of this experience.
 
-    c.drawString(50, 625, "We want to welcome you to our camp community, where you will have the opportunity to")
-    c.drawString(50, 610, "make new friends, participate in exciting activities, and develop your skills in various")
-    c.drawString(50, 595, "areas. We are confident that you will have a wonderful time and create lasting memories.")
+We want to welcome you to our camp community, where you will have the opportunity to make new friends, participate in exciting activities, and develop your skills in various areas. We are confident that you will have a wonderful time and create lasting memories.
 
-    c.drawString(50, 570, f"Your camper ID is {row['CamperID'].values[0]}.")
+Your camper ID is {row['CamperID'].values[0]}.
 
-    c.drawString(50, 545, "Please find enclosed a copy of our camp rules and regulations, as well as a list of items")
-    c.drawString(50, 530, "to bring with you. We kindly ask that you read these documents carefully and comply")
-    c.drawString(50, 515, "with all rules and instructions.")
+Please find enclosed a copy of our camp rules and regulations, as well as a list of items to bring with you. We kindly ask that you read these documents carefully and comply with all rules and instructions.
 
-    c.drawString(50, 490, "We will be sending out additional information as we approach the camp start date, so")
-    c.drawString(50, 475, "please be on the lookout for those messages.")
+We will be sending out additional information as we approach the camp start date, so please be on the lookout for those messages.
 
-    c.drawString(50, 450, "Once again, congratulations on your acceptance to our camp program. We look forward")
-    c.drawString(50, 435, "to seeing you soon.")
+Once again, congratulations on your acceptance to our camp program. We look forward to seeing you soon.
 
-    c.drawString(50, 410, "Sincerely,")
+Sincerely,
 
-    c.drawString(50, 385, "Camp Gila Breath Admission")
-    c.drawString(50, 370, row['Date'].values[0])
+Camp Gila Breath Admission
+{row['Date'].values[0]}
+"""
 
-    c.save()
+    # Add letter content to the content list
+    for line in letter_content.split('\n'):
+        ptext = f'<font size="12">{line}</font>'
+        content.append(Paragraph(ptext, styles["Normal"]))
+        content.append(Spacer(1, 12))
+
+    # Build and save the PDF
+    doc.build(content)
