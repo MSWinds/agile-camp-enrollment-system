@@ -6,6 +6,8 @@ import hashlib
 import datetime
 from algorithm.accpt_letter import create_acceptance_letter
 from algorithm.rejct_letter import create_rejection_letter
+from algorithm.arrival_form import create_arrival_form
+from algorithm.equipment_checklist import create_equipment_checklist
 
 class ApplicationInputFrame:
     def __init__(self):
@@ -148,6 +150,8 @@ class PaymentInputFrame:
                 camper_info = pd.concat([camper_data, payment_data], axis=1)
 
                 create_acceptance_letter(camper_info)
+                create_arrival_form(camper_info)
+                create_equipment_checklist(camper_info)
 
                 # save the dataframe into a csv file
                 if not os.path.isfile('data/camper_info.csv'):
