@@ -22,7 +22,7 @@ def create_equipment_checklist(row):
     # Equipment Checklist content
     equipment_checklist_content = f"""EQUIPMENT CHECK LIST 
 
-Dear {row['CamperID'].values[0]}
+Dear {row['First Name'].values[0]} {row['Last Name'].values[0]},
 
 This equipment checklist is designed to ensure that all necessary equipment is available and in working order for the upcoming camp. The following items should be inspected and checked off prior to the start of the camp:
 

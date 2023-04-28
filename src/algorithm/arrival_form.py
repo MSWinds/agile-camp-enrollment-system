@@ -22,7 +22,7 @@ def create_arrival_form(row):
     # Arrival Form Guide content
     arrival_guide_content = f"""ARRIVAL FORM GUIDE
 
-Dear {row['CamperID'].values[0]},
+Dear {row['First Name'].values[0]} {row['Last Name'].values[0]},
 
 Please complete the Arrival Form below with any important information to help us ensure a safe and enjoyable experience for your child.
 
