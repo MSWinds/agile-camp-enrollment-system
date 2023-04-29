@@ -2,6 +2,7 @@ import PySimpleGUI as sg
 from application import ApplicationInputFrame
 from assigner import AssignerFrame
 from checkin import CheckinFrame
+from refund import RefundFrame
 
 def main():
     # Set PySimpleGUI theme
@@ -13,6 +14,7 @@ def main():
         [sg.Column([[sg.Button('Register', size=(30, 2), font=('Helvetica', 14))],
                     [sg.Button('Check-in', size=(30, 2), font=('Helvetica', 14))],
                     [sg.Button('Assign', size=(30, 2), font=('Helvetica', 14))],
+                    [sg.Button('Refund', size=(30, 2), font=('Helvetica', 14))],
                     [sg.Button('Quit', size=(30, 2), font=('Helvetica', 14))]])]]
 
     # Create PySimpleGUI window
@@ -32,7 +34,9 @@ def main():
 
         if event == 'Check-in':
             CheckinFrame().run()
-
+            
+        if event == 'Refund':
+            RefundFrame().run()
     window.close()
 
 
