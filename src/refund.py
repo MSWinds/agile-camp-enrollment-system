@@ -33,7 +33,7 @@ class RefundFrame:
                 camper_data = pd.read_csv('data/camper_data.csv')
 
                 # Find the original payment date for the camper
-                original_payment_date = camper_data.loc[camper_data['CamperID'] == camper_id, 'Date of Original Payment']
+                original_payment_date = camper_data.loc[camper_data['CamperID'] == camper_id, 'Date']
                 original_payment_date = datetime.datetime.strptime(original_payment_date.values[0], '%Y-%m-%d').date()
 
                 # Calculate the refund amount

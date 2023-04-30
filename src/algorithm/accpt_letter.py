@@ -34,6 +34,12 @@ Please find enclosed a copy of our camp rules and regulations, as well as a list
 
 We will be sending out additional information as we approach the camp start date, so please be on the lookout for those messages.
 
+Please note that the following refund policy will be applied:
+
+If cancellation is received within 3 weeks of the mailing of the notice of acceptance and arrival instructions, a refund of 90% of the payment will be given.
+If cancellation is received within 6 weeks of the mailing of the notice of acceptance and arrival instructions, a refund of 45% of the payment will be given.
+No refund will be given for cancellations received after 6 weeks of the mailing of the notice of acceptance and arrival instructions.
+
 Once again, congratulations on your acceptance to our camp program. We look forward to seeing you soon.
 
 Sincerely,
