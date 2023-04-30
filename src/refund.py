@@ -2,7 +2,7 @@ import PySimpleGUI as sg
 import pandas as pd
 import os
 import datetime
-
+from algorithm.refund_letter import create_refund_letter
 
 class RefundFrame:
     def __init__(self):
@@ -32,6 +32,11 @@ class RefundFrame:
                 camper_id = values['camper_id']
                 camper_data = pd.read_csv('data/camper_data.csv')
 
+                # check if Camper ID is not in the camper data
+                if int(camper_id) not in camper_data['CamperID'].values:
+                    sg.Popup('Error: Camper ID does not exist.')
+                    continue
+
                 # Find the original payment date for the camper
                 original_payment_date = camper_data.loc[camper_data['CamperID'] == camper_id, 'Date']
                 original_payment_date = datetime.datetime.strptime(original_payment_date.values[0], '%Y-%m-%d').date()
@@ -55,6 +60,8 @@ class RefundFrame:
                     'Date of Original Payment': [original_payment_date.strftime('%Y-%m-%d')],
                     'Date of Request': [request_date.strftime('%Y-%m-%d')]
                 })
+
+                create_refund_letter(refund_data) # Create a refund letter for the camper
 
                 # Save the data frame into a CSV file
                 if not os.path.isfile('data/refund_info.csv'):
