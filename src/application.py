@@ -151,14 +151,19 @@ class PaymentInputFrame:
                     continue
 
             if event == 'Submit and Print':
-                # Check if the check number is numeric or larger than 10 digits
-                if not values['check_num'].isnumeric() or len(values['check_num']) <= 10:
+                # Check if the check number is not numeric and also not 4 digits
+                if not values['check_num'].isnumeric() or len(values['check_num']) != 4:
                     sg.Popup("Error: Check number is invalid.")
                     continue
 
                 # Check if the payee name is not numeric
                 if values['check_name'].isnumeric():
                     sg.Popup("Error: Payee name is invalid.")
+                    continue
+
+                # check if the amount is not 1000
+                if values['check_amount'] != '1000':
+                    sg.Popup("Error: Check amount is invalid.")
                     continue
 
                 check_valid = 'Yes' if values['check_valid'] else 'No'
