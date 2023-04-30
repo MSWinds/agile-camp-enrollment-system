@@ -1,13 +1,15 @@
 import pandas as pd
 
 
-def assign_bunkhouse(merged_data):
+def assign_bunkhouse(df):
     # Define the bunkhouse names and number of beds
     bunkhouses = {f'BH{i}_{gender}_{session}': 12 for i in range(1, 4) for gender in ['M', 'F'] for session in
                   ['June', 'July', 'August']}
 
     # Create a dictionary to store the assigned bunkhouses
     assigned_bunkhouses = {bunkhouse: [] for bunkhouse in bunkhouses}
+
+    merged_data = df.copy()
 
     # Assign bunkhouses for each session and gender
     for session in ['June', 'July', 'August']:
@@ -36,11 +38,12 @@ def assign_bunkhouse(merged_data):
     return merged_data
 
 
-def assign_tribe(df):
+def assign_tribe(merged_data):
     # Define the session names and initialize an empty dictionary for tribes
     sessions = ['June', 'July', 'August']
     tribes = {}
 
+    df= merged_data.copy()
     # Loop through each session
     for session in sessions:
         # Filter the DataFrame to get data for the current session

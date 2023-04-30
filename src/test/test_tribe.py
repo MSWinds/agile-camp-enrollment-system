@@ -55,7 +55,7 @@ class TestAssigningTribes(unittest.TestCase):
                                        msg=f"Male gender is not balanced in {tribe_name} for {session} session")
                 self.assertAlmostEqual(tribe_gender_count['F'], 6, delta=2,
                                        msg=f"Female gender is not balanced in {tribe_name} for {session} session")
-
+        print(result)
 
 if __name__ == '__main__':
     unittest.main()
