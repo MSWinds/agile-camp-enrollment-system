@@ -43,15 +43,15 @@ class CheckinFrame:
                     values['Check-in Status'] = True
                     # add the medical condition and dietary restriction to the record
                     checkin_data = pd.DataFrame({
-                        'Last Name': [values['Last Name']],
-                        'CamperID': [values['CamperId']],
-                        'Gender': [values['Gender']],
+                        'Last Name': [values['last_name']],
+                        'CamperID': [values['camper_id']],
+                        'Gender': [values['gender']],
                         'Check-in Status': [values['Check-in Status']],
                         'Check-in Time': [datetime.datetime.now().strftime('%Y-%m-%d')],  # current date and time
-                        'Equipment Valid': [values['Eq_Valid']],
-                        'Medical Condition': [values['Med_Condition']], # arrivial form
-                        'Dietary Restriction': [values['Dietary_Restrict']],
-                        'Emergency Contact Information:': [values['Emergency_Contact']]
+                        'Equipment Valid': [values['eq_valid']],
+                        'Medical Condition': [values['med_condition']], # arrivial form
+                        'Dietary Restriction': [values['dietary_restrict']],
+                        'Emergency Contact Information:': [values['emergency_contact']]
                     })
                     # save the dataframe into a csv file
                     if not os.path.isfile('data/checkin_info.csv'):
@@ -59,7 +59,6 @@ class CheckinFrame:
                     else:
                         checkin_data.to_csv('data/checkin_info.csv', mode='a', header=False, index=False)
                     sg.Popup('Check-in Successful!')
-                    break
                 else:
                     sg.Popup('Error: No matching record found. Please check your input.')
         window.close()

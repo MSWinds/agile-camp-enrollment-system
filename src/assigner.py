@@ -22,17 +22,23 @@ class AssignerFrame:
         def assign_button(s):
             try:
                 # Load the camper information data set
-                data = pd.read_csv('data/camper_info.csv')
+                camper_info = pd.read_csv('data/camper_info.csv')
 
                 # Filter the data set to include only the specified session
-                data = data[data['Session'] == s]
+                camper_info = camper_info[camper_info['Session'] == s]
+
+                # data has only the CamperID, Last Name, Gender, Age, and Session columns from camper_info
+                data = camper_info[["CamperID","Last Name","Gender","Age","Session"]]
 
                 # Assign bunkhouses and tribes
                 data['Bunkhouse'] = assign_bunkhouse(data)
                 data['Tribe'] = assign_tribe(data)
 
-                # Save the assigned data to a csv file
-                data.to_csv('data/assignment.csv', index=False)
+                # Save the assigned data to a csv file if exists, otherwise create a new file
+                if os.path.exists('data/assignment.csv'):
+                    data.to_csv('data/assignment.csv', mode='a', header=False, index=False)
+                else:
+                    data.to_csv('data/assignment.csv', index=False)
 
                 # Display a success message
                 success_msg = f'{len(data)} campers have been successfully assigned.'
