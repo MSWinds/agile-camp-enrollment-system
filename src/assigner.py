@@ -1,6 +1,8 @@
 import pandas as pd
 import PySimpleGUI as sg
 import os
+import subprocess
+import sys
 
 from algorithm.assigner_algorithms import assign_bunkhouse, assign_tribe
 
@@ -8,7 +10,7 @@ from algorithm.assigner_algorithms import assign_bunkhouse, assign_tribe
 class AssignerFrame:
     def __init__(self):
         self.layout = [
-            [sg.Button('Assign'), sg.Button('Reset')],
+            [sg.Button('Assign'), sg.Button('Reset'), sg.Button('Edit')],
             [sg.Text('', size=(30, 2), key='success_msg')],
             [sg.Text('', size=(30, 2), key='reset_msg')]
         ]
@@ -74,6 +76,51 @@ class AssignerFrame:
                 # Display a generic error message for any other errors
                 sg.popup_error(f'An error occurred: {str(e)}')
 
+        # Define the function for modifying camper assignments
+        def modify_button():
+            assignment_file = 'data/assignment.csv'
+
+            if not os.path.exists(assignment_file):
+                sg.popup_error("No assignments found. Please assign campers first.")
+                return
+
+            data = pd.read_csv(assignment_file)
+
+            while True:
+                modify_layout = [
+                    [sg.Text('Camper ID:'), sg.InputText('', key='camper_id')],
+                    [sg.Text('Column to modify:'), sg.InputCombo(['Bunkhouse', 'Tribe'], key='column')],
+                    [sg.Text('New value:'), sg.InputText('', key='new_value')],
+                    [sg.Button('Modify')]
+                ]
+
+                modify_window = sg.Window('Modify Camper Assignments', modify_layout)
+
+                event, values = modify_window.read()
+
+                if event == 'Modify':
+                    try:
+                        camper_id = int(values['camper_id'])
+                        column = values['column']
+                        new_value = values['new_value']
+
+                        if camper_id in data['CamperID'].values:
+                            data.loc[data['CamperID'] == camper_id, column] = new_value
+                            sg.popup(f"Successfully modified Camper ID {camper_id}'s {column} to {new_value}")
+                        else:
+                            sg.popup_error(f"Camper ID {camper_id} not found")
+                    except ValueError:
+                        sg.popup_error("Invalid input. Please enter a valid Camper ID.")
+                    except Exception as e:
+                        sg.popup_error(f"An error occurred: {str(e)}")
+                elif event == sg.WIN_CLOSED:
+                    modify_window.close()
+                    break
+
+            # Save the modified dataframe to the assignment.csv file
+            data.to_csv(assignment_file, index=False)
+
+
         while True:
             event, values = window.read()
             print(event, values)  # debug
@@ -83,6 +130,8 @@ class AssignerFrame:
                 assign_button()
             elif event == 'Reset':
                 reset_button()
+            elif event == 'Edit':
+                modify_button()
 
         # Close the window when the loop ends
         window.close()
