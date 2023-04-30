@@ -70,6 +70,29 @@ class ApplicationInputFrame:
                     'Contact Information': [values['contact_info']],
                     'Special Requests': [values['special_requests']]
                 })
+                
+                # Load the existing camper information and count campers by gender and session
+                if os.path.isfile('data/camper_info.csv'):
+                    camper_info_raw = pd.read_csv('data/camper_info.csv')
+                    campers_by_gender_and_session = camper_info_raw.groupby(['Session', 'Gender']).size().reset_index(name='Count')
+                    # Check if the limit is reached for the camper's gender and session
+                    campers_count = campers_by_gender_and_session.loc[
+                                                                        (campers_by_gender_and_session['Session'] == values['session_choice']) &
+                                                                        (campers_by_gender_and_session['Gender'] == values['gender']),
+                                                                        'Count'].values
+
+                    if campers_count.size > 0 and campers_count[0] >= 36:
+                        sg.Popup("Error: The camp has reached the capacity limit for this session and gender.")
+                        rejection_result = "Reach the Capacity Limit"
+                        camper_data = pd.DataFrame({
+                                                    'First Name': [values['f_name']],
+                                                    'Last Name': [values['l_name']],
+                                                    'Session': [values['session_choice']]
+                                                    })
+                        create_rejection_letter(camper_data, rejection_result)
+                        continue
+
+
                 PaymentInputFrame().run(camper_data)
                 break
             
