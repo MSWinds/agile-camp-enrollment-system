@@ -4,6 +4,8 @@ import os
 import datetime
 from algorithm.refund_letter import create_refund_letter
 
+
+
 class RefundFrame:
     def __init__(self):
         self.layout = [
@@ -30,7 +32,7 @@ class RefundFrame:
                 break
             if event == 'Submit':
                 camper_id = values['camper_id']
-                camper_data = pd.read_csv('data/camper_data.csv')
+                camper_data = pd.read_csv('data/camper_info.csv')
 
                 # check if Camper ID is not in the camper data
                 if int(camper_id) not in camper_data['CamperID'].values:
@@ -38,8 +40,8 @@ class RefundFrame:
                     continue
 
                 # Find the original payment date for the camper
-                original_payment_date = camper_data.loc[camper_data['CamperID'] == camper_id, 'Date']
-                original_payment_date = datetime.datetime.strptime(original_payment_date.values[0], '%Y-%m-%d').date()
+                original_payment_date = camper_data.loc[camper_data['CamperID'] == int(camper_id), 'Date']
+                original_payment_date = datetime.datetime.strptime(original_payment_date.values[0], "%m/%d/%Y").date()
 
                 # Calculate the refund amount
                 request_date = datetime.date.today()

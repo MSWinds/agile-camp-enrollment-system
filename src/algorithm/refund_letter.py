@@ -12,7 +12,7 @@ def create_refund_letter(row):
     if not os.path.exists(dir_path):
         os.makedirs(dir_path)
 
-    pdf_name = f"files/refund/{row['CamperID']}_Refund.pdf"
+    pdf_name = f"files/refund/{row['CamperID'].values[0]}_Refund.pdf"
     doc = SimpleDocTemplate(pdf_name, pagesize=letter, rightMargin=72, leftMargin=72, topMargin=72, bottomMargin=18)
     
     content = []
@@ -25,7 +25,7 @@ def create_refund_letter(row):
 Dear Camper,
 
 We have received your request for a refund in the amount of {row['Refund Amount'].values[0]}, 
-for the payment made on {row['Date of Original Payment'].values[0]} for the {row['Session'].values[0]} camp. 
+for the payment made on {row['Date of Original Payment'].values[0]} for the camp. 
 We apologize for any inconvenience this may cause and will do our best to process your refund promptly.
 
 Your refund request was made on {row['Date of Request'].values[0]} and we will process it as soon as possible. 

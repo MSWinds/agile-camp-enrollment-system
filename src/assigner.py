@@ -65,6 +65,7 @@ class AssignerFrame:
                     # Display a reset message
                     reset_msg = f'{len(data)} campers have been successfully reset.'
                     window['reset_msg'].update(reset_msg)
+                    os.remove('data/assignment.csv')
                 else:
                     # Display an error message if the assignment file doesn't exist
                     sg.popup_error('No assignments found to reset.')
