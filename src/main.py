@@ -3,6 +3,7 @@ from application import ApplicationInputFrame
 from assigner import AssignerFrame
 from checkin import CheckinFrame
 from refund import RefundFrame
+from report import ReportFrame
 
 def main():
     # Set PySimpleGUI theme
@@ -15,7 +16,10 @@ def main():
                     [sg.Button('Check-in', size=(30, 2), font=('Helvetica', 14))],
                     [sg.Button('Assign', size=(30, 2), font=('Helvetica', 14))],
                     [sg.Button('Refund', size=(30, 2), font=('Helvetica', 14))],
-                    [sg.Button('Quit', size=(30, 2), font=('Helvetica', 14))]])]]
+                    [sg.Button('Viwer', size=(30, 2), font=('Helvetica', 14))],
+                    [sg.Button('Quit', size=(30, 2), font=('Helvetica', 14))]]
+                    )
+                    ]]
 
     # Create PySimpleGUI window
     window = sg.Window('Camp Gila Breath Management System', frame, element_justification='c').Finalize()
@@ -37,6 +41,10 @@ def main():
             
         if event == 'Refund':
             RefundFrame().run()
+
+        if event == 'Viewer':
+            ReportFrame().run()
+
     window.close()
 
 
