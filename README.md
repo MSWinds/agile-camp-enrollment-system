@@ -20,6 +20,7 @@ This Python project is designed to support the work of the registration clerk at
 
 ## Installation
 pip install -r requirements.txt
+
 run the camp_registration_win.exe
 
 ## License
